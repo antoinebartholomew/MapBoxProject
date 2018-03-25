@@ -1,0 +1,23 @@
+<!-- https://www.mapbox.com/mapbox.js/api/v3.1.1/ -->
+<!-- LEAFLET PULG-INs -> https://www.mapbox.com/mapbox.js/plugins/ -->
+
+pk.eyJ1IjoiYWJhcnRob2xvbWV3IiwiYSI6ImNqZjF2Njk2bTBpZ2cycWxubXd2ZHYxenAifQ.f9o_9nwuUGWyXt2Bc0_AXw
+
+<!--Add mapbox.js -->
+<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+
+WEB SITES
+https://stackoverflow.com/questions/35069753/mapbox-gl-js-vs-mapbox-js -- MAP BOX JS VS GL
+
+https://github.com/Leaflet/Leaflet.draw/issues/551 -- save coordinates of polygon draw
+
+https://stackoverflow.com/questions/31790344/determine-if-a-point-reside-inside-a-leaflet-polygon
+
+?????????????????????????????? Data Base and sequelize help links ?????????????????????????????????????
+
+http://docs.sequelizejs.com/manual/installation/getting-started
+
+https://stackoverflow.com/questions/38937455/creating-a-table-for-polygon-values-in-postgis-and-inserting
+
+http://strimas.com/spatial/r-postgis-2/

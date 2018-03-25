@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Show drawn polygon area</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- https://www.mapbox.com/mapbox.js/api/v3.1.1/ -->
+    <!--Add mapbox.js -->
+    <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+    <!--Add mapbox.js CLUSTERMARKER-->
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+    <!--Add mapbox.js DRAWING ON MAP-->
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.js'></script>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-geodesy/v0.1.0/leaflet-geodesy.js'></script>
+
+    <!--jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+
+
+
+      <!-- Supports point-in-polygon queries -->
+      <!-- Leaflet Omnivore: Loads and parses KML, CSV, GPX, GeoJSON, and TopoJSON formats -->
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-pip/v0.1.0/leaflet-pip.min.js'></script>
+    <script
+    src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'>
+    </script>
+
+    <link
+     href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.4.10/leaflet.draw.js'>
+
+     src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'>
+    </script>
+
+
+
+    <!--Add mapbox.js -->
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.min.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.mapbox.css' rel='stylesheet' />
+    <!--[if lt IE 9]>
+      <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.ie.css' rel='stylesheet' />
+    <![endif]-->
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/css/font-awesome.min.css' rel='stylesheet' />
+
+      <!-- END LEAFLET PULG-INs -->
+
+      <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+      </style>
+
+
+
+</head>
+      <body>
+        <a href='#' id='geolocate' class='ui-button'>Find me</a>
+        <div id='map' ></div>
+        <div id='delete'>Delete Features</div>
+        <a href='#' id='export'>Export Features</a>
+
+
+      </body>
+      <script>
+          L.mapbox.accessToken = 'pk.eyJ1IjoiYWJhcnRob2xvbWV3IiwiYSI6ImNqZjF2Njk2bTBpZ2cycWxubXd2ZHYxenAifQ.f9o_9nwuUGWyXt2Bc0_AXw';
+          var geolocate = document.getElementById('geolocate');
+          // Here we don't use the second argument to map, since that would automatically
+          // load in non-clustered markers from the layer. Instead we add just the
+          // backing tileLayer, and then use the featureLayer only for its data.
+          var map = L.mapbox.map('map','mapbox.streets')
+              .setView([38.79930767201779, -77.12911152370515], 13)
+
+
+
+
+          var featureGroup = L.featureGroup().addTo(map);
+
+                var drawControl = new L.Control.Draw({
+                    edit: {
+                        featureGroup: featureGroup
+                    },
+                    draw: {
+                      polygon: true,
+                      polyline: false,
+                      rectangle: false,
+                      circle: false,
+                      marker: true
+                    }
+                }).addTo(map);
+
+                map.on('draw:created', function(e) {
+                  const type = e.layerType;
+                  const layer = e.layer;
+                  // When a user finishes editing a shape we get that information here
+                  // editableLayers.addLayer(layer);
+                  console.log('draw:created->');
+                  console.log(JSON.stringify(layer.toGeoJSON()));
+              });
+
+              var myLayer = L.mapbox.featureLayer()
+              .loadURL('/Users/antoinebartholomew/Desktop/MapBoxProject/JSONdata/stations.geojson')
+              .on('ready', function() {
+                myLayer.eachLayer(function(layer) {
+                  map.fitBounds(myLayer.getBounds());
+                  layer.bindPopup(layer.features.properties.name);
+                });
+              })
+              .addTo(map);
+
+
+
+          </script>
+
+</html>

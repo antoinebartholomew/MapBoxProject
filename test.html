@@ -1,0 +1,193 @@
+Popular / About Dan Swick’s Block 36796153bd86ce982a59043cbe0ac8f7
+Updated October 4, 2017
+Save GeoJSON from Mapbox GL Draw
+
+Open
+Use Mapbox GL Draw to draw features and download as GeoJSON.
+
+index.html#
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.21.0/mapbox-gl.js'></script>
+    <script src='mapbox-gl-draw.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.21.0/mapbox-gl.css' rel='stylesheet' />
+    <link href='mapbox-gl-draw.css' rel='stylesheet' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #export, #updateDataset {
+            position: absolute;
+            top:140px;
+            left:10px;
+            z-index:100;
+            background-color:white;
+            color:black;
+            padding:6px;
+            border-radius:4px;
+            font-family: 'Helvetica Neue';
+            cursor: pointer;
+            font-size:12px;
+            text-decoration:none;
+            background-image: url(icon.png);
+            background-repeat: no-repeat;
+            background-position: -4245px -3px;
+            height: 20px;
+            width: 20px;
+        }
+        #export:hover, #updateDataset:hover {
+            background-color: #ddd;
+        }
+        #updateDataset {
+            background-position: -4324px -3px;
+            top: 180px;
+        }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<a href='#' id='export'></a>
+<a href="#" id='updateDataset'></a>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuc3dpY2siLCJhIjoiY2l1dTUzcmgxMDJ0djJ0b2VhY2sxNXBiMyJ9.25Qs4HNEkHubd4_Awbd8Og';
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/dark-v9', //stylesheet location
+    center: [9.096173491685818,39.233140189548976], // starting position
+    zoom: 11 // starting zoom
+});
+var geoJsonFeatures;
+var Draw = mapboxgl.Draw();
+
+var datasetId = "cirqs92m00hu8fgm8piqgihok";
+
+var source = new mapboxgl.GeoJSONSource({
+    data: {
+      "type": "FeatureCollection",
+      "features": []
+    }
+});
+
+  map.on('load', function(){
+    map.addControl(Draw);
+
+    map.addSource('my-dataset', source);
+    map.addLayer({
+        "id": "dataset-point",
+        "type": "circle",
+        "source": "my-dataset",
+        "layout": {},
+        "paint": {
+            // grab the route's color value
+            "circle-color": "#73b6e6",
+        },
+        "filter": [
+            "all",
+            ["==", "$type", "Point"]
+        ]
+    });
+    map.addLayer({
+        "id": "dataset-line",
+        "type": "line",
+        "source": "my-dataset",
+        "layout": {},
+        "paint": {
+            // grab the route's color value
+            "line-color": "#73b6e6",
+        },
+        "filter": [
+            "all",
+            ["==", "$type", "LineString"]
+        ]
+    });
+    map.addLayer({
+        "id": "dataset-fill",
+        "type": "fill",
+        "source": "my-dataset",
+        "layout": {},
+        "paint": {
+            // grab the route's color value
+            "fill-color": "#73b6e6",
+            "fill-outline-color": "#fff"
+        },
+        "filter": [
+            "all",
+            ["==", "$type", "Polygon"]
+        ]
+    });
+
+    document.getElementById('export').onclick = function(e) {
+        // Extract GeoJson from featureGroup
+        var data = Draw.getAll();
+
+        if (data.features.length > 0) {
+            // Stringify the GeoJson
+            var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+
+            // Create export
+            document.getElementById('export').setAttribute('href', 'data:' + convertedData);
+            document.getElementById('export').setAttribute('download','data.geojson');
+        } else {
+            alert("Wouldn't you like to draw some data?");
+        }
+
+    }
+    document.getElementById('updateDataset').onclick = function(e) {
+        e.preventDefault();
+        uploadFeatures();
+    }
+
+    getData(datasetId);
+
+
+});
+
+function setFeatureId(){
+    return getData(datasetId);
+}
+
+function getData(datasetId) {
+    $.ajax({
+      url : 'https://evening-sierra-80988.herokuapp.com/dataset?datasetId=' + datasetId,
+      type : 'GET',
+      dataType: 'json'
+    })
+    .done(function(oldData){
+        geoJsonFeatures = oldData;
+        source.setData(geoJsonFeatures);
+        return geoJsonFeatures;
+    });
+}
+
+function uploadFeatures(){
+    var drawnData = Draw.getAll();
+    for(i = 0; i < drawnData.features.length; i++){
+
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+        xmlhttp.open("POST", 'https://evening-sierra-80988.herokuapp.com/dataset');
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(JSON.stringify({"feature":drawnData.features[i], "datasetId": "cirqs92m00hu8fgm8piqgihok"}));
+
+        xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200 && i == drawnData.features.length) {
+            alert('upload successful!');
+
+            getData(datasetId);
+        } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200){
+            alert('looks like something went wrong');
+        }
+    };
+    }
+}
+
+</script>
+
+</body>
+</html>

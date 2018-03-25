@@ -1,0 +1,24 @@
+{
+  "name": "mapboxproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antoinebartholomew/MapBoxProject.git"
+  },
+  "author": "A.Bartholomew",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antoinebartholomew/MapBoxProject/issues"
+  },
+  "homepage": "https://github.com/antoinebartholomew/MapBoxProject#readme",
+  "dependencies": {
+    "nodemon": "^1.17.2",
+    "sequelize": "^4.37.4",
+    "swiper": "^4.2.0"
+  }
+}
