@@ -26,3 +26,7 @@ Nike - http://dev.nike.com/activities/list_users_activities
 MyFitnessPal - http://www.myfitnesspal.com/api
 
 Under Armor - https://developer.underarmour.com/docs/
+
+Examples of intrest - https://www.mapbox.com/mapbox.js/example/v1.0.0/markercluster-custom-polygon-appearance/
+
+Heroku - https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction
