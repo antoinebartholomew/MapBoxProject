@@ -30,3 +30,5 @@ Under Armor - https://developer.underarmour.com/docs/
 Examples of intrest - https://www.mapbox.com/mapbox.js/example/v1.0.0/markercluster-custom-polygon-appearance/
 
 Heroku - https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction
+
+This application will be built and supported by collecting Volunteered Geographic Information - https://www.bing.com/search?q=volunteered+geographic+information&FORM=HDRSC1
